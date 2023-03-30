@@ -1,0 +1,37 @@
+server:
+  port: 8080
+
+spring:
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  sql:
+    init:
+      platform: 'postgres'
+  mail:
+    host: ${MAIL_HOST}
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          ssl:
+            trust: "*"
+          auth: true
+          connection-timeout: 5000
+          timeout: 5000
+          write-timeout: 5000
+          starttls:
+            enable: true
+
+  datasource:
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+    url: ${POSTGRESQL_URL}
+    driver-class-name: org.postgresql.Driver
+
+security:
+  jwtSecret: ${JWT_SECRET}
