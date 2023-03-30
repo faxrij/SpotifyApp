@@ -117,7 +117,7 @@ public class UserService {
         }
 
         Subscription subscription = subscriptionRepository.findById(subId).orElseThrow(
-                () -> new BusinessException(ErrorCode.resource_missing, "Subscription with provided Id does not exist")
+                () -> new BusinessException(ErrorCode.resource_missing, "Subscription with provided id does not exist")
         );
 
         ContractRecord currentContractRecord = contractRepository.findContractRecordByUserIdAndIsActive(userId);

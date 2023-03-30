@@ -11,19 +11,17 @@ import com.example.spotifyproject.repository.SubscriptionRepository;
 import com.example.spotifyproject.repository.UserRepository;
 import com.example.spotifyproject.service.mapper.FromSubscriptionToSubscriptionResponse;
 import com.example.spotifyproject.util.DateUtil;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -32,11 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-
 @ExtendWith(MockitoExtension.class)
 class SubscriptionServiceTest {
-    private SubscriptionService subscriptionService;
-
     @Mock
     private SubscriptionRepository subscriptionRepository;
 
@@ -46,10 +41,8 @@ class SubscriptionServiceTest {
     @Mock
     private FromSubscriptionToSubscriptionResponse fromSubscriptionToSubscriptionResponse;
 
-    @BeforeEach
-    void setUp() {
-        subscriptionService = new SubscriptionService(subscriptionRepository, userRepository, fromSubscriptionToSubscriptionResponse);
-    }
+    @InjectMocks
+    private SubscriptionService subscriptionService;
 
     @Test
     void testGetSubscriptions() {
@@ -59,7 +52,7 @@ class SubscriptionServiceTest {
         subscription1.setDuration(2);
         subscription1.setMonthlyFee(100);
         subscription1.setActive(false);
-        subscription1.setName("ASAD");
+        subscription1.setName("SUB1");
         subscription1.setCreatedDate(DateUtil.now());
         subscription1.setModifiedDate(DateUtil.now());
 

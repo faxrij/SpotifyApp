@@ -47,7 +47,6 @@ public class UserCategoryService {
             categoryList.add(category);
         }
         return new PageImpl<>(categoryList.stream().map(fromCategoryToCategoryResponse::fromCategoryToCategoryResponse).collect(Collectors.toList()));
-
     }
 
     public CategoryResponse getUserCategoryByContentId(String userId, String categoryId, String currentUserId) {

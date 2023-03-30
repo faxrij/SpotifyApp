@@ -53,7 +53,7 @@ public class InvoiceServiceTest {
         // given
         User adminUser = new User();
         adminUser.setRole(Role.ADMIN);
-        when(userRepository.findById("adminUserId")).thenReturn(Optional.of(adminUser));
+        when(userRepository.findById("123")).thenReturn(Optional.of(adminUser));
 
         Pageable pageable = PageRequest.of(0, 10);
         List<Invoice> invoiceList = new ArrayList<>();
@@ -67,11 +67,11 @@ public class InvoiceServiceTest {
         when(fromInvoiceToInvoiceResponse.setterFromInvoiceToInvoiceResponse(Mockito.any())).thenReturn(invoiceResponse1, invoiceResponse2);
 
         // when
-        Page<InvoiceResponse> result = invoiceService.getInvoices(pageable, "adminUserId");
+        Page<InvoiceResponse> result = invoiceService.getInvoices(pageable, "123");
 
         // then
         Assertions.assertEquals(2, result.getContent().size());
-        Mockito.verify(userRepository).findById("adminUserId");
+        Mockito.verify(userRepository).findById("123");
         Mockito.verify(invoiceRepository).findAll(pageable);
         Mockito.verify(fromInvoiceToInvoiceResponse, times(2)).setterFromInvoiceToInvoiceResponse(Mockito.any());
     }
