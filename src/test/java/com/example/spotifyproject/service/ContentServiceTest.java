@@ -1,7 +1,6 @@
 package com.example.spotifyproject.service;
 
 
-import com.example.spotifyproject.entity.Invoice;
 import com.example.spotifyproject.entity.Role;
 import com.example.spotifyproject.entity.Song;
 import com.example.spotifyproject.entity.User;
@@ -9,7 +8,6 @@ import com.example.spotifyproject.exception.BusinessException;
 import com.example.spotifyproject.model.request.content.CreateContentRequest;
 import com.example.spotifyproject.model.request.content.UpdateContentRequest;
 import com.example.spotifyproject.model.response.ContentResponse;
-import com.example.spotifyproject.model.response.InvoiceResponse;
 import com.example.spotifyproject.repository.ContentRepository;
 import com.example.spotifyproject.repository.InvoiceRepository;
 import com.example.spotifyproject.repository.UserRepository;
@@ -49,8 +47,6 @@ public class ContentServiceTest {
     private ContentService contentService;
     @Mock
     private FromSongToContentResponse fromSongToContentResponse;
-    @Mock
-    private InvoiceRepository invoiceRepository;
     private User user;
 
     @BeforeEach
@@ -104,7 +100,7 @@ public class ContentServiceTest {
 
     @Test
     public void testGetAllContent_unauthorized() {
-        // Mock input parameters
+        // given
         Pageable pageable = PageRequest.of(0, 10);
         String name = "testName";
         String lyrics = "testLyrics";
@@ -112,14 +108,12 @@ public class ContentServiceTest {
         String composerName = "testComposerName";
         String userId = "testUserId";
 
-        // Mock User
         User user = new User();
         user.setRole(Role.GUEST);
 
-        // Mock userRepository
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        // Call method
+        // then
         assertThrows(BusinessException.class, () -> contentService.getAllContent(pageable, name, lyrics, title, composerName, userId));
     }
 
@@ -250,7 +244,7 @@ public class ContentServiceTest {
 
     @Test
     void testDeleteContent() {
-        // create a new song
+        // given
         Song song = new Song();
         song.setName("Song Name");
         song.setTitle("Song Title");

@@ -46,7 +46,7 @@ public class UserServiceTest {
     @Mock
     private SubscriptionRepository subscriptionRepository;
     @Captor
-    ArgumentCaptor<ContractRecord> captor;
+    private ArgumentCaptor<ContractRecord> captor;
 
 
     @Test
@@ -400,8 +400,5 @@ public class UserServiceTest {
         Mockito.verify(userRepository).save(user);
         Mockito.verify(contractRepository).save(captor.capture());
         assertFalse(contractRecord.isActive());
-
     }
-
-
 }

@@ -4,7 +4,6 @@ import com.example.spotifyproject.entity.Category;
 import com.example.spotifyproject.entity.Role;
 import com.example.spotifyproject.entity.User;
 import com.example.spotifyproject.exception.BusinessException;
-import com.example.spotifyproject.exception.ErrorCode;
 import com.example.spotifyproject.model.response.CategoryResponse;
 import com.example.spotifyproject.repository.CategoryRepository;
 import com.example.spotifyproject.repository.UserRepository;
@@ -128,25 +127,19 @@ public class UserCategoryServiceTest {
     public void testGetUserCategoryByContentId_UserNotFound() {
         when(userRepository.findById(any(String.class))).thenReturn(Optional.empty());
 
-        assertThrows(BusinessException.class, () -> {
-            userCategoryService.getUserCategoryByContentId("1", "1", "1");
-        });
+        assertThrows(BusinessException.class, () -> userCategoryService.getUserCategoryByContentId("1", "1", "1"));
     }
 
     @Test
     public void testGetUserCategoryByContentId_UserNotAllowed() {
-        assertThrows(BusinessException.class, () -> {
-            userCategoryService.getUserCategoryByContentId("1", "1", "2");
-        });
+        assertThrows(BusinessException.class, () -> userCategoryService.getUserCategoryByContentId("1", "1", "2"));
     }
 
     @Test
     public void testGetUserCategoryByContentId_CategoryNotFound() {
         when(userRepository.findById("1")).thenReturn(Optional.of(new User()));
 
-        assertThrows(BusinessException.class, () -> {
-            userCategoryService.getUserCategoryByContentId("1", "cat", "1");
-        });
+        assertThrows(BusinessException.class, () -> userCategoryService.getUserCategoryByContentId("1", "cat", "1"));
     }
 
     @Test
@@ -176,14 +169,14 @@ public class UserCategoryServiceTest {
 
     @Test
     void testUserLikeCategoryByIdWhenNoMatch() {
-        assertThrows(BusinessException.class, () -> {userCategoryService.userLikeCategoryById("1", "3", "2");});
+        assertThrows(BusinessException.class, () -> userCategoryService.userLikeCategoryById("1", "3", "2"));
     }
 
     @Test
     void testUserLikeCategoryByIdWhenCategoryDoesNotExist() {
         when(userRepository.findById("1")).thenReturn(Optional.of(new User()));
         when(categoryRepository.findById(anyString())).thenReturn(Optional.empty());
-        assertThrows(BusinessException.class, () -> {userCategoryService.userLikeCategoryById("1", "3", "1");});
+        assertThrows(BusinessException.class, () -> userCategoryService.userLikeCategoryById("1", "3", "1"));
     }
 
     @Test
@@ -207,18 +200,18 @@ public class UserCategoryServiceTest {
         when(categoryRepository.findById("3")).thenReturn(Optional.of(category));
 
         // when + then
-        assertThrows(BusinessException.class, () -> {userCategoryService.userLikeCategoryById("1", "3", "1");});
+        assertThrows(BusinessException.class, () -> userCategoryService.userLikeCategoryById("1", "3", "1"));
     }
 
     @Test
     void testUserRemoveLikedCategoryByIdWhenNoMatch() {
-        assertThrows(BusinessException.class, () -> {userCategoryService.userRemoveLikedCategoryById("1", "3", "2");});
+        assertThrows(BusinessException.class, () -> userCategoryService.userRemoveLikedCategoryById("1", "3", "2"));
     }
 
     @Test
     void testUserRemoveLikedCategoryByIdWhenUserDoesNotExist() {
         when(userRepository.findById("1")).thenReturn(Optional.empty());
-        assertThrows(BusinessException.class, () -> {userCategoryService.userRemoveLikedCategoryById("1", "3", "1");});
+        assertThrows(BusinessException.class, () -> userCategoryService.userRemoveLikedCategoryById("1", "3", "1"));
     }
 
     @Test
@@ -237,7 +230,7 @@ public class UserCategoryServiceTest {
 
         when(userRepository.findById("1")).thenReturn(Optional.of(user));
         when(categoryRepository.findById(anyString())).thenReturn(Optional.of(category));
-        assertThrows(BusinessException.class, () -> {userCategoryService.userRemoveLikedCategoryById("1", "3", "1");});
+        assertThrows(BusinessException.class, () -> userCategoryService.userRemoveLikedCategoryById("1", "3", "1"));
     }
 
     @Test

@@ -125,14 +125,13 @@ class SubscriptionServiceTest {
         // given
         when(subscriptionRepository.findById(Mockito.anyString())).thenReturn(Optional.empty());
 
-        // when and then
-        assertThrows(BusinessException.class,
-                () -> subscriptionService.getSubscriptionsById("1"));
+        // when + then
+        assertThrows(BusinessException.class, () -> subscriptionService.getSubscriptionsById("1"));
     }
 
     @Test
     void testAddSubscription() {
-        // Arrange
+        // given
         String userId = "1";
         User adminUser = new User();
         adminUser.setId("1");
@@ -145,16 +144,16 @@ class SubscriptionServiceTest {
         request.setFee(10);
         when(userRepository.findById(userId)).thenReturn(Optional.of(adminUser));
 
-        // Act
+        // when
         subscriptionService.addSubscription(request, userId);
 
-        // Assert
+        // then
         verify(subscriptionRepository).save(any(Subscription.class));
     }
 
     @Test
     void testAddSubscriptionNonAdminUser() {
-        // Arrange
+        // given
         String userId = "1";
         User regularUser = new User();
         regularUser.setId("1");
@@ -167,7 +166,7 @@ class SubscriptionServiceTest {
         request.setDuration(30);
         when(userRepository.findById(userId)).thenReturn(Optional.of(regularUser));
 
-        // Act and assert
+        // when + then
         BusinessException exception = assertThrows(BusinessException.class,
                 () -> subscriptionService.addSubscription(request, userId));
         assertEquals("unauthorized", exception.getErrorCode());
@@ -175,7 +174,7 @@ class SubscriptionServiceTest {
 
     @Test
     void testAddSubscriptionNonExistentUser() {
-        // Arrange
+        // given
         String userId = "1";
         CreateSubscriptionRequest request = new CreateSubscriptionRequest();
         request.setName("Test Subscription");
@@ -336,10 +335,10 @@ class SubscriptionServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(subscriptionRepository.findById(id)).thenReturn(Optional.of(subscription));
 
-        // Act
+        // when
         subscriptionService.deleteSubscription(id, userId);
 
-        // Assert
+        // then
         ArgumentCaptor<Subscription> argumentCaptor = ArgumentCaptor.forClass(Subscription.class);
         verify(subscriptionRepository).save(argumentCaptor.capture());
         Subscription savedSubscription = argumentCaptor.getValue();

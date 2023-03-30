@@ -72,7 +72,7 @@ public class AuthControllerIntegrationTest {
 
     @Test
     public void verify_shouldVerifyUser() {
-        // Create a new user with an unverified email address
+        // given
         User user = new User();
         user.setEmail("test@example.com");
         user.setPasswordHash(passwordEncoder.encode("password"));
@@ -83,18 +83,16 @@ public class AuthControllerIntegrationTest {
         user.setModifiedDate(ZonedDateTime.now());
         userRepository.save(user);
 
-        // Create a verification request with the correct email address and verification code
         EmailVerificationRequest request = new EmailVerificationRequest();
         request.setEmail("test@example.com");
         request.setVerificationCode("code");
 
-        // Make the request to the API
+        // when
         ResponseEntity<Void> response = restTemplate.exchange("/auth/verify", HttpMethod.POST, new HttpEntity<>(request), Void.class);
 
-        // Check that the response has a success status code
+        // then
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
-        // Check that the user has been verified in the database
         Optional<User> verifiedUser = userRepository.findUserByEmail("test@example.com");
         assertTrue(verifiedUser.isPresent());
         assertTrue(verifiedUser.get().isVerified());
@@ -156,19 +154,19 @@ public class AuthControllerIntegrationTest {
 
     @Test
     public void sendVerificationEmail_throwsException() {
-        // Create a user
+        // given
         User user = new User();
         user.setEmail("test@example.com");
         user.setCreatedDate(ZonedDateTime.now());
         user.setModifiedDate(ZonedDateTime.now());
         userRepository.save(user);
 
-        // Send a verification email
+        // when
         EmailRequest request = new EmailRequest();
         request.setEmail("test@example.com");
         ResponseEntity<Void> response = restTemplate.exchange("/auth/verify/email", HttpMethod.POST, new HttpEntity<>(request), Void.class);
 
-        // Verify that the response is successful
+        // then
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
         // TODO: Assert that an email was sent
@@ -176,7 +174,7 @@ public class AuthControllerIntegrationTest {
 
     @Test
     public void login_shouldReturnToken() {
-        // Create a user
+        // given
         User user = new User();
         user.setEmail("test@example.com");
         user.setPasswordHash(passwordEncoder.encode("password"));
@@ -184,13 +182,13 @@ public class AuthControllerIntegrationTest {
         user.setModifiedDate(ZonedDateTime.now());
         userRepository.save(user);
 
-        // Log in
+        // when
         LoginRequest request = new LoginRequest();
         request.setEmail("test@example.com");
         request.setPassword("password");
         ResponseEntity<LoginResponse> response = restTemplate.exchange("/auth/login", HttpMethod.POST, new HttpEntity<>(request), LoginResponse.class);
 
-        // Verify that the response is successful and contains a token
+        // then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(Objects.requireNonNull(response.getBody()).getToken());
     }

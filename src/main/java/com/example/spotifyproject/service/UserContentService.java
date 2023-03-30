@@ -33,7 +33,7 @@ public class UserContentService {
         }
 
         userRepository.findById(userId).orElseThrow(
-                () -> new BusinessException(ErrorCode.account_missing, "Account does not exist")
+                () -> new BusinessException(ErrorCode.account_missing, "User is not found")
         );
 
         Page<String> songIds = userRepository.findSongsByUserId(pageable, id);
@@ -72,13 +72,7 @@ public class UserContentService {
     }
 
     public void userLikeSongById(String userId, String contentId, String currentUserId) {
-        if (!currentUserId.equals(userId)) {
-            throw new BusinessException(ErrorCode.forbidden, "You are not allowed here");
-        }
-
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new BusinessException(ErrorCode.account_missing, "User is not found")
-        );
+        User user = getUser(userId, currentUserId);
         Song song = contentRepository.findById(contentId).orElseThrow(
                 () -> new BusinessException(ErrorCode.resource_missing, "Song does not exist")
         );
@@ -92,13 +86,7 @@ public class UserContentService {
     }
 
     public void userRemoveLikedSongById(String userId, String contentId, String currentUserId) {
-        if (!currentUserId.equals(userId)) {
-            throw new BusinessException(ErrorCode.forbidden, "You are not allowed here");
-        }
-
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new BusinessException(ErrorCode.account_missing, "User is not found")
-        );
+        User user = getUser(userId, currentUserId);
         Song song = contentRepository.findById(contentId).orElseThrow(
                 () -> new BusinessException(ErrorCode.resource_missing, "Song does not exist")
         );
@@ -108,6 +96,16 @@ public class UserContentService {
         }
 
         userRepository.removeLikedSongByUserIdAndSongId(userId,contentId);
+    }
+
+    private User getUser(String userId, String currentUserId) {
+        if (!currentUserId.equals(userId)) {
+            throw new BusinessException(ErrorCode.forbidden, "You are not allowed here");
+        }
+
+        return userRepository.findById(userId).orElseThrow(
+                () -> new BusinessException(ErrorCode.account_missing, "User is not found")
+        );
     }
 
 }

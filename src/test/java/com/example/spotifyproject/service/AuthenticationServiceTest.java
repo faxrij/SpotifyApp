@@ -117,21 +117,20 @@ class AuthenticationServiceTest {
 
     @Test
     public void register_withNewUser_shouldSaveUser() {
-        // Set up test data
+        // given
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setName("John");
         registerRequest.setLastName("Doe");
         registerRequest.setPassword("password");
         registerRequest.setEmail("john.doe@example.com");
 
-        // Set up mock behavior
         when(userRepository.findUserByEmail(registerRequest.getEmail())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(registerRequest.getPassword())).thenReturn("encodedPassword");
 
-        // Call the method being tested
+        // when
         authenticationService.register(registerRequest);
 
-        // Verify that the expected user was saved
+        // then
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository).save(userCaptor.capture());
         User savedUser = userCaptor.getValue();
