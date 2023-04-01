@@ -1,4 +1,4 @@
-#FROM registry.gitlab.com/research-ecosystems-apds/server/base:latest as builder
+FROM registry.gitlab.com/fahri7403304/spotify_backend/base:latest as builder
 
 WORKDIR /usr/local/app
 
