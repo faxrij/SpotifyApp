@@ -84,7 +84,7 @@ public class UserService {
     }
 
     @Scheduled(cron = "0 0 0 16 * ?")  // midnight at 16th day of every month
-    private void checkInvoicesAtTheEndOf15thDayOfEveryMonth() {
+    public void checkInvoicesAtTheEndOf15thDayOfEveryMonth() {
        List<Invoice> invoices = invoiceRepository.findAllUnpaidInvoicesThatWereCreatedInLessThan16Days();
        List<ContractRecord> contractRecords = new ArrayList<>();
 

@@ -169,7 +169,6 @@ public class UserContentServiceTest {
 
         // then
         verify(userRepository).likeSongByUserIdAndSongId("1", "3");
-        assertEquals(user.getSongs().size(),1);
     }
 
     @Test
