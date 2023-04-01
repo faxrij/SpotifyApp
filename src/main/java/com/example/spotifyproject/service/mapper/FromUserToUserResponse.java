@@ -6,6 +6,7 @@ import com.example.spotifyproject.entity.Song;
 import com.example.spotifyproject.entity.User;
 import com.example.spotifyproject.model.response.CategoryResponse;
 import com.example.spotifyproject.model.response.ContentResponse;
+import com.example.spotifyproject.model.response.ContractRecordResponse;
 import com.example.spotifyproject.model.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,13 +14,13 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Service
 @RequiredArgsConstructor
 public class FromUserToUserResponse {
 
     private final FromCategoryToCategoryResponse fromCategoryToCategoryResponse;
     private final FromSongToContentResponse fromSongToContentResponse;
+    private final FromContractRecordIntoResponse fromContractRecordIntoResponse;
 
     public UserResponse fromUserToUserResponse(User temp) {
 
@@ -30,6 +31,8 @@ public class FromUserToUserResponse {
 
         List<CategoryResponse> categoryResponses = new ArrayList<>();
         List<ContentResponse> contentResponses = new ArrayList<>();
+        List<ContractRecordResponse> contractRecordResponses = new ArrayList<>();
+
 
         for (Category category:categories) {
             categoryResponses.add(fromCategoryToCategoryResponse.fromCategoryToCategoryResponse(category));
@@ -39,6 +42,9 @@ public class FromUserToUserResponse {
             contentResponses.add(fromSongToContentResponse.fromSongToContentResponse(song));
         }
 
+        for (ContractRecord contractRecord:contractRecords) {
+            contractRecordResponses.add(fromContractRecordIntoResponse.setterFromContractToContractResponse(contractRecord));
+        }
 
         userResponse.setId(temp.getId());
         userResponse.setName(temp.getName());
@@ -49,7 +55,7 @@ public class FromUserToUserResponse {
         userResponse.setModifiedDate(temp.getModifiedDate());
         userResponse.setFollowedCategories(categoryResponses);
         userResponse.setFollowedSongs(contentResponses);
-        userResponse.setContractRecords(contractRecords);
+        userResponse.setContractRecords(contractRecordResponses);
         return userResponse;
     }
 

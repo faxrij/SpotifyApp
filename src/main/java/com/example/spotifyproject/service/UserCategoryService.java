@@ -72,13 +72,8 @@ public class UserCategoryService {
     }
 
     public void userLikeCategoryById(String userId, String contentId, String currentUserId) {
-        if (!currentUserId.equals(userId)) {
-            throw new BusinessException(ErrorCode.forbidden, "You are not allowed here");
-        }
+        User user = getUser(userId, currentUserId);
 
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new BusinessException(ErrorCode.account_missing, "User is not found")
-        );
         Category category = categoryRepository.findById(contentId).orElseThrow(
                 () -> new BusinessException(ErrorCode.resource_missing, "Category does not exist")
         );
@@ -91,13 +86,7 @@ public class UserCategoryService {
     }
 
     public void userRemoveLikedCategoryById(String userId, String contentId, String currentUserId) {
-        if (!currentUserId.equals(userId)) {
-            throw new BusinessException(ErrorCode.forbidden, "You are not allowed here");
-        }
-
-        User user = userRepository.findById(userId).orElseThrow(
-                () -> new BusinessException(ErrorCode.account_missing, "User is not found")
-        );
+        User user = getUser(userId, currentUserId);
         Category category = categoryRepository.findById(contentId).orElseThrow(
                 () -> new BusinessException(ErrorCode.resource_missing, "Category does not exist")
         );
@@ -107,6 +96,16 @@ public class UserCategoryService {
         }
 
         userRepository.removeLikedCategoryByUserIdAndSongId(userId,contentId);
+    }
+
+    private User getUser(String userId, String currentUserId) {
+        if (!currentUserId.equals(userId)) {
+            throw new BusinessException(ErrorCode.forbidden, "You are not allowed here");
+        }
+
+        return userRepository.findById(userId).orElseThrow(
+                () -> new BusinessException(ErrorCode.account_missing, "User is not found")
+        );
     }
 
 }

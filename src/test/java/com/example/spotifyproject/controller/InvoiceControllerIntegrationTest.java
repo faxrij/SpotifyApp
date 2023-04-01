@@ -57,6 +57,28 @@ public class InvoiceControllerIntegrationTest {
             "/invoice/create_invoice.sql"})
     @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = {"/invoice/delete_invoice.sql", "/contractRecord/delete_record.sql",
             "/auth/delete_user.sql"})
+    public void testGetInvoices_withNonAdminUser() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(tokenHelper.generateTokenForMember());
+
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<CategoryResponse> response = restTemplate.exchange(
+                "/invoice",
+                HttpMethod.GET,
+                entity,
+                new ParameterizedTypeReference<CategoryResponse>() {
+                });
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = {"/auth/create_user.sql", "/contractRecord/create_record.sql",
+            "/invoice/create_invoice.sql"})
+    @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = {"/invoice/delete_invoice.sql", "/contractRecord/delete_record.sql",
+            "/auth/delete_user.sql"})
     public void testGetInvoiceById() {
         String invoiceId = "41e7c96d-5d9a-4bc6-81c7-dc5a07d70f5e";
 
@@ -75,6 +97,53 @@ public class InvoiceControllerIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
         assertEquals(invoiceId, response.getBody().getId());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = {"/auth/create_user.sql", "/contractRecord/create_record.sql",
+            "/invoice/create_invoice.sql"})
+    @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = {"/invoice/delete_invoice.sql", "/contractRecord/delete_record.sql",
+            "/auth/delete_user.sql"})
+    public void testGetInvoiceById_withNonAdminUser() {
+        String invoiceId = "41e7c96d-5d9a-4bc6-81c7-dc5a07d70f5e";
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setBearerAuth(tokenHelper.generateTokenForMember());
+
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<CategoryResponse> response = restTemplate.exchange(
+                "/invoice/" + invoiceId,
+                HttpMethod.GET,
+                entity,
+                CategoryResponse.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = {"/auth/create_user.sql", "/contractRecord/create_record.sql",
+            "/invoice/create_invoice.sql"})
+    @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = {"/invoice/delete_invoice.sql", "/contractRecord/delete_record.sql",
+            "/auth/delete_user.sql"})
+    public void testGetInvoiceById_whenInvoiceDoesNotExist() {
+        String invoiceId = "41e7c96d-5d9a-4bc6-81c7-dc5a07d70f5e1";
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.setBearerAuth(tokenHelper.generateTokenForAdmin());
+
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<CategoryResponse> response = restTemplate.exchange(
+                "/invoice/" + invoiceId,
+                HttpMethod.GET,
+                entity,
+                CategoryResponse.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+
     }
 
     @Test

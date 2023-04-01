@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final AuthenticationService authenticationService;
-
-
     @GetMapping
     public Page<UserResponse> getUsers(Pageable pageable) {
         return userService.getUsers(pageable, authenticationService.getAuthenticatedUserId());

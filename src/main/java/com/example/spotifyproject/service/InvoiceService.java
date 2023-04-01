@@ -62,6 +62,7 @@ public class InvoiceService {
     }
 
     public void payInvoice(String invoiceId, PayInvoiceRequest body, String userId) {
+
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new BusinessException(ErrorCode.account_missing, "User does not exist")
         );

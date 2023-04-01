@@ -1,7 +1,6 @@
 package com.example.spotifyproject.model.response;
 
 
-import com.example.spotifyproject.entity.ContractRecord;
 import com.example.spotifyproject.entity.Role;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -17,7 +16,7 @@ public class UserResponse extends CommonResponseField{
     private String email;
     private Role role;
     @JsonIgnoreProperties(value = {"user_fk","invoices"})
-    private List<ContractRecord> contractRecords;
+    private List<ContractRecordResponse> contractRecords;
     @JsonIgnoreProperties(value = {"parent","song_list","users"})
     private List<CategoryResponse> followedCategories;
     @JsonIgnoreProperties(value = {"parent","categories","users"})

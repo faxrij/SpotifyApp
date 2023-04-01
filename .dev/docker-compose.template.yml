@@ -1,0 +1,24 @@
+version: '3'
+services:
+  server:
+    image: ${CI_REGISTRY_IMAGE}:${CI_IMAGE_TAG}
+    ports:
+      - "8080:8080"
+    restart: always
+    volumes:
+      - /home/spotify/cdn/:/data/
+    extra_hosts:
+      - "host.docker.internal:172.17.0.1"
+    environment:
+      - POSTGRESQL_URL=${POSTGRESQL_URL}
+      - POSTGRESQL_USERNAME=${POSTGRESQL_USERNAME}
+      - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
+      - MAIL_HOST=${MAIL_HOST}
+      - MAIL_USERNAME=${MAIL_USERNAME}
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+#      - CDN_HOST=${CDN_HOST}
+      - JWT_SECRET=${JWT_SECRET}
+
+networks:
+  gateway:
+    external: true

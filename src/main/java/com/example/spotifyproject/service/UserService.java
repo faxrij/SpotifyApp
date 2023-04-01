@@ -82,8 +82,9 @@ public class UserService {
             throw new BusinessException(ErrorCode.unauthorized, "User is not authorized");
         }
     }
+
     @Scheduled(cron = "0 0 0 16 * ?")  // midnight at 16th day of every month
-    public void checkInvoicesAtTheEndOf15thDayOfEveryMonth() {
+    private void checkInvoicesAtTheEndOf15thDayOfEveryMonth() {
        List<Invoice> invoices = invoiceRepository.findAllUnpaidInvoicesThatWereCreatedInLessThan16Days();
        List<ContractRecord> contractRecords = new ArrayList<>();
 
@@ -99,7 +100,6 @@ public class UserService {
             user.setRole(Role.INACTIVE_MEMBER);
             userRepository.save(user);
         }
-
     }
 
     public void subscribe(String userId, String subId, String currentUserId) {

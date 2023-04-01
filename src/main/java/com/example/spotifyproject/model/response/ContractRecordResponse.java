@@ -13,6 +13,5 @@ public class ContractRecordResponse extends CommonResponseField{
     private int duration;
     private String remainingDuration;
     private boolean isActive;
-    private UserResponse user;
     private List<InvoiceResponse> invoices;
 }

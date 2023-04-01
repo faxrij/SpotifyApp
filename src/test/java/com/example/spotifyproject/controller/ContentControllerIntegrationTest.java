@@ -3,7 +3,7 @@ package com.example.spotifyproject.controller;
 import com.example.spotifyproject.helper.TokenHelper;
 import com.example.spotifyproject.model.request.content.CreateContentRequest;
 import com.example.spotifyproject.model.request.content.UpdateContentRequest;
-import com.example.spotifyproject.model.response.CategoryResponse;
+import com.example.spotifyproject.model.response.ContentResponse;
 import com.example.spotifyproject.util.RestResponsePage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,11 +38,11 @@ public class ContentControllerIntegrationTest {
 
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
-        ResponseEntity<RestResponsePage<CategoryResponse>> response = restTemplate.exchange(
+        ResponseEntity<RestResponsePage<ContentResponse>> response = restTemplate.exchange(
                 "/content",
                 HttpMethod.GET,
                 entity,
-                new ParameterizedTypeReference<RestResponsePage<CategoryResponse>>() {
+                new ParameterizedTypeReference<RestResponsePage<ContentResponse>>() {
                 });
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -58,15 +58,15 @@ public class ContentControllerIntegrationTest {
 
         HttpHeaders headers = new HttpHeaders();
 
-        headers.setBearerAuth(tokenHelper.generateTokenForAdmin());
+        headers.setBearerAuth(tokenHelper.generateTokenForMember());
 
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
-        ResponseEntity<CategoryResponse> response = restTemplate.exchange(
+        ResponseEntity<ContentResponse> response = restTemplate.exchange(
                 "/content/" + contentId,
                 HttpMethod.GET,
                 entity,
-                CategoryResponse.class);
+                ContentResponse.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
@@ -99,6 +99,31 @@ public class ContentControllerIntegrationTest {
     }
 
     @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = {"/auth/create_user.sql"})
+    @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = {"/auth/delete_user.sql", "/content/delete_song.sql"})
+    public void testAddContent_whenUserIsNonAdmin() {
+        CreateContentRequest createContentRequest = new CreateContentRequest();
+        createContentRequest.setName("Test Song");
+        createContentRequest.setComposer("Test Composer");
+        createContentRequest.setTitle("Test Title");
+        createContentRequest.setLyrics("Test Lyrics");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(tokenHelper.generateTokenForMember());
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<CreateContentRequest> entity = new HttpEntity<>(createContentRequest, headers);
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "/content",
+                HttpMethod.POST,
+                entity,
+                Void.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = {"/auth/create_user.sql", "/content/create_song.sql"})
     @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = {"/auth/delete_user.sql", "/content/delete_song.sql"})
     public void testUpdateContent() {
@@ -127,7 +152,59 @@ public class ContentControllerIntegrationTest {
     @Test
     @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = {"/auth/create_user.sql", "/content/create_song.sql"})
     @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = {"/auth/delete_user.sql", "/content/delete_song.sql"})
-    public void testDeleteCategory() {
+    public void testUpdateContent_whenContentDoesNotExist() {
+        String contentId = "70f72757-1ba7-4638-9360-afeb89ef67851";
+
+        UpdateContentRequest updateContentRequest = new UpdateContentRequest();
+        updateContentRequest.setName("Update Test Content");
+        updateContentRequest.setComposerName("Update Test Composer");
+        updateContentRequest.setTitle("TEST TITLE");
+        updateContentRequest.setLyric("TEST LYRICS");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(tokenHelper.generateTokenForAdmin());
+
+        HttpEntity<UpdateContentRequest> entity = new HttpEntity<>(updateContentRequest, headers);
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "/content/" + contentId,
+                HttpMethod.PUT,
+                entity,
+                Void.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = {"/auth/create_user.sql", "/content/create_song.sql"})
+    @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = {"/auth/delete_user.sql", "/content/delete_song.sql"})
+    public void testUpdateContent_withNonAdminUser() {
+        String contentId = "70f72757-1ba7-4638-9360-afeb89ef6785";
+
+        UpdateContentRequest updateContentRequest = new UpdateContentRequest();
+        updateContentRequest.setName("Update Test Content");
+        updateContentRequest.setComposerName("Update Test Composer");
+        updateContentRequest.setTitle("TEST TITLE");
+        updateContentRequest.setLyric("TEST LYRICS");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(tokenHelper.generateTokenForMember());
+
+        HttpEntity<UpdateContentRequest> entity = new HttpEntity<>(updateContentRequest, headers);
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "/content/" + contentId,
+                HttpMethod.PUT,
+                entity,
+                Void.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = {"/auth/create_user.sql", "/content/create_song.sql"})
+    @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = {"/auth/delete_user.sql", "/content/delete_song.sql"})
+    public void testDeleteContent() {
         String contentId = "70f72757-1ba7-4638-9360-afeb89ef6785";
 
         HttpHeaders headers = new HttpHeaders();
@@ -144,5 +221,43 @@ public class ContentControllerIntegrationTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = {"/auth/create_user.sql", "/content/create_song.sql"})
+    @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = {"/auth/delete_user.sql", "/content/delete_song.sql"})
+    public void testDeleteContent_withNonAdminUser() {
+        String contentId = "70f72757-1ba7-4638-9360-afeb89ef6785";
 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(tokenHelper.generateTokenForMember());
+
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "/content/" + contentId,
+                HttpMethod.DELETE,
+                entity,
+                Void.class);
+
+        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+    }
+
+    @Test
+    @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, value = {"/auth/create_user.sql", "/content/create_song.sql"})
+    @Sql(executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD, value = {"/auth/delete_user.sql", "/content/delete_song.sql"})
+    public void testDeleteContent_whenContentDoesNotExist() {
+        String contentId = "70f72757-1ba7-4638-9360-afeb89ef67851";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(tokenHelper.generateTokenForAdmin());
+
+        HttpEntity<String> entity = new HttpEntity<>(null, headers);
+
+        ResponseEntity<Void> response = restTemplate.exchange(
+                "/content/" + contentId,
+                HttpMethod.DELETE,
+                entity,
+                Void.class);
+
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
 }

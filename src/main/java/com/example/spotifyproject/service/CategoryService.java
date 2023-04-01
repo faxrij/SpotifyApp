@@ -64,12 +64,17 @@ public class CategoryService {
                 () -> new BusinessException(ErrorCode.account_missing, "Account does not exist")
         );
 
-        if(!user.getRole().equals(Role.ADMIN)) {
+        if (!user.getRole().equals(Role.ADMIN)) {
             throw new BusinessException(ErrorCode.unauthorized, "User is not authenticated");
         }
 
         Category superCategory = categoryRepository.findSuperCategory();
 
+        categorySetter(request, superCategory);
+
+    }
+
+    private void categorySetter(CreateCategoryRequest request, Category superCategory) {
         Category newCategory = new Category();
         newCategory.setSuperCategory(false);
         newCategory.setName(request.getName());
@@ -78,7 +83,6 @@ public class CategoryService {
         newCategory.setModifiedDate(DateUtil.now());
 
         categoryRepository.save(newCategory);
-
     }
 
     public void addCategoryByParentId(String parentId, CreateCategoryRequest request, String userId) {
@@ -94,14 +98,7 @@ public class CategoryService {
                 () -> new BusinessException(ErrorCode.resource_missing, "Parent Category does not exist")
         );
 
-        Category newCategory = new Category();
-        newCategory.setSuperCategory(false);
-        newCategory.setName(request.getName());
-        newCategory.setParent(parentCategory);
-        newCategory.setCreatedDate(DateUtil.now());
-        newCategory.setModifiedDate(DateUtil.now());
-
-        categoryRepository.save(newCategory);
+        categorySetter(request, parentCategory);
     }
 
     public void updateCategory(String id, UpdateCategoryRequest request, String userId) {

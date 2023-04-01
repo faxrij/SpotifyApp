@@ -11,14 +11,12 @@ import java.time.Period;
 @Service
 @RequiredArgsConstructor
 public class FromContractRecordIntoResponse {
-    private final FromUserToUserResponse fromUserToUserResponse;
     public ContractRecordResponse setterFromContractToContractResponse(ContractRecord contractRecord) {
 
         ContractRecordResponse contractRecordResponse = new ContractRecordResponse();
         contractRecordResponse.setName(contractRecord.getName());
         contractRecordResponse.setActive(contractRecord.isActive());
         contractRecordResponse.setDuration(contractRecord.getDuration());
-        contractRecordResponse.setUser(fromUserToUserResponse.fromUserToUserResponse(contractRecord.getUser_fk()));
         contractRecordResponse.setMonthlyFee(contractRecord.getMonthlyFee());
 
         contractRecordResponse.setRemainingDuration(String.valueOf(Period.between(DateUtil.now().toLocalDate(),
