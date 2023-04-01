@@ -2,7 +2,7 @@ FROM registry.gitlab.com/fahri7403304/spotify_backend/base:latest as builder
 
 WORKDIR /usr/local/app
 
-COPY src ./
+COPY ./ ./
 
 RUN mvn \
     -Dmaven.test.skip=true \
