@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class CategoryResponse extends CommonResponseField{
+public class CategoryResponse extends CommonResponseField {
     private String id;
     private String name;
     @JsonIgnoreProperties(value = {"parent","song_list","users"})

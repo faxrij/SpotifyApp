@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-public class Invoice extends Auditable{
+public class Invoice extends Auditable {
 
     @Column(name = "fee",nullable = false)
     private int fee;

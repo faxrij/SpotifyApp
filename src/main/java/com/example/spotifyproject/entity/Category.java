@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class Category extends Auditable{
+public class Category extends Auditable {
 
     @Column(name = "name")
     private String name;

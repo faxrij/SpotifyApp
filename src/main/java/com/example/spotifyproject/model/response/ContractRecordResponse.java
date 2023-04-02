@@ -7,7 +7,7 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ContractRecordResponse extends CommonResponseField{
+public class ContractRecordResponse extends CommonResponseField {
     private String name;
     private int monthlyFee;
     private int duration;

@@ -9,7 +9,7 @@ import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ContentResponse extends CommonResponseField{
+public class ContentResponse extends CommonResponseField {
     private String name;
     private String lyrics;
     private String title;
