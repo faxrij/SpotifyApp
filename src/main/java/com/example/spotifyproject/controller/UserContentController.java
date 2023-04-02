@@ -25,7 +25,7 @@ public class UserContentController {
     @GetMapping("/{userId}/content/{contentId}")
     public ContentResponse getUserContentsByContentId(@PathVariable String userId,
                                                       @PathVariable String contentId) {
-        return userContentService.getUserContentsByContentId(userId, contentId, authenticationService.getAuthenticatedUserId());
+        return userContentService.getUserContentsById(userId, contentId, authenticationService.getAuthenticatedUserId());
     }
 
     @PostMapping("/{userId}/content/{contentId}/favorite")

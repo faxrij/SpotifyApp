@@ -12,6 +12,7 @@ import com.example.spotifyproject.repository.UserRepository;
 import com.example.spotifyproject.service.mapper.FromInvoiceToInvoiceResponse;
 import com.example.spotifyproject.util.DateUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -32,6 +33,7 @@ public class InvoiceService {
     private final PaymentRepository paymentRepository;
     private final FromInvoiceToInvoiceResponse fromInvoiceToInvoiceResponse;
 
+    @Cacheable(value = "invoicesCache")
     public Page<InvoiceResponse> getInvoices(Pageable pageable, String userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new BusinessException(ErrorCode.account_missing, "User does not exist")
@@ -46,6 +48,7 @@ public class InvoiceService {
         return invoices.map(fromInvoiceToInvoiceResponse::setterFromInvoiceToInvoiceResponse);
     }
 
+    @Cacheable(value = "invoiceCache", key = "#id")
     public InvoiceResponse getInvoiceById(String id, String userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new BusinessException(ErrorCode.account_missing, "User does not exist")

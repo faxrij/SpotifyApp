@@ -13,6 +13,7 @@ import com.example.spotifyproject.repository.UserRepository;
 import com.example.spotifyproject.service.mapper.FromCategoryToCategoryResponse;
 import com.example.spotifyproject.util.DateUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,7 @@ public class CategoryService {
     private final UserRepository userRepository;
     private final FromCategoryToCategoryResponse fromCategoryToCategoryResponse;
 
+    @Cacheable(value = "categoriesCache")
     public Page<CategoryResponse> getCategories(Pageable pageable, String name, String id) {
         User user = userRepository.findById(id).orElseThrow(
                 () -> new BusinessException(ErrorCode.account_missing, "Account does not exist")
@@ -42,6 +44,7 @@ public class CategoryService {
         return categories.map(fromCategoryToCategoryResponse::fromCategoryToCategoryResponse);
     }
 
+    @Cacheable(value = "categoryCache", key = "#id")
     public CategoryResponse getCategoryById(String id, String userId) {
 
         User user = userRepository.findById(userId).orElseThrow(

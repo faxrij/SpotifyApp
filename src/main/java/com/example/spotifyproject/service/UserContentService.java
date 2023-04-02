@@ -9,6 +9,7 @@ import com.example.spotifyproject.repository.ContentRepository;
 import com.example.spotifyproject.repository.UserRepository;
 import com.example.spotifyproject.service.mapper.FromSongToContentResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,7 @@ public class UserContentService {
     private final ContentRepository contentRepository;
     private final FromSongToContentResponse fromSongToContentResponse;
 
+    @Cacheable(value = "userContentsCache")
     public Page<ContentResponse> getUserContents(Pageable pageable, String id, String userId) {
 
         if (!(id.equals(userId))) {
@@ -47,7 +49,8 @@ public class UserContentService {
         return new PageImpl<>(songList);
     }
 
-    public ContentResponse getUserContentsByContentId(String userId, String contentId, String currentUserId) {
+    @Cacheable(value = "userContentCache", key = "#contentId")
+    public ContentResponse getUserContentsById(String userId, String contentId, String currentUserId) {
 
         if (!(currentUserId.equals(userId))) {
             throw new BusinessException(ErrorCode.forbidden, "You cannot see other users' content");

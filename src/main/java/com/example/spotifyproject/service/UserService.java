@@ -10,6 +10,7 @@ import com.example.spotifyproject.service.mapper.FromInvoiceToInvoiceResponse;
 import com.example.spotifyproject.service.mapper.FromUserToUserResponse;
 import com.example.spotifyproject.util.DateUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,6 +32,7 @@ public class UserService {
     private final FromInvoiceToInvoiceResponse fromInvoiceToInvoiceResponse;
     private final FromUserToUserResponse fromUserToUserResponse;
 
+    @Cacheable(value = "usersCache")
     public Page<UserResponse> getUsers(Pageable pageable, String userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new BusinessException(ErrorCode.resource_missing, "User does not exist")
@@ -44,7 +46,7 @@ public class UserService {
         return userList.map(fromUserToUserResponse::fromUserToUserResponse);
     }
 
-
+    @Cacheable(value = "userCache", key = "#id")
     public UserResponse getUserById(String id, String userId) {
 
         checker(id, userId);

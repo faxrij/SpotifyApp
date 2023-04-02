@@ -13,6 +13,7 @@ import com.example.spotifyproject.repository.UserRepository;
 import com.example.spotifyproject.service.mapper.FromSubscriptionToSubscriptionResponse;
 import com.example.spotifyproject.util.DateUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,12 +28,13 @@ public class SubscriptionService {
     private final UserRepository userRepository;
     private final FromSubscriptionToSubscriptionResponse fromSubscriptionToSubscriptionResponse;
 
+    @Cacheable(value = "subscriptionsCache")
     public Page<SubscriptionResponse> getSubscriptions(Pageable pageable) {
-
         Page<Subscription> subscriptions = subscriptionRepository.findAll(pageable);
         return subscriptions.map(fromSubscriptionToSubscriptionResponse::fromSubscriptionToSubscriptionResponse);
     }
 
+    @Cacheable(value = "subscriptionCache", key = "#id")
     public SubscriptionResponse getSubscriptionsById(String id) {
           Subscription response = subscriptionRepository.findById(id).orElseThrow(
                   () -> new BusinessException(ErrorCode.account_missing, "There is no subscription with given id"));

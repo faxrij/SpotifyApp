@@ -118,7 +118,7 @@ public class UserCategoryServiceTest {
         when(categoryRepository.findById(id)).thenReturn(Optional.of(category1));
         when(fromCategoryToCategoryResponse.fromCategoryToCategoryResponse(category1)).thenReturn(new CategoryResponse());
 
-        CategoryResponse result = userCategoryService.getUserCategoryByContentId(userId, id, userId);
+        CategoryResponse result = userCategoryService.getUserCategoryById(userId, id, userId);
 
         assertNotNull(result);
     }
@@ -127,19 +127,19 @@ public class UserCategoryServiceTest {
     public void testGetUserCategoryByContentId_UserNotFound() {
         when(userRepository.findById(any(String.class))).thenReturn(Optional.empty());
 
-        assertThrows(BusinessException.class, () -> userCategoryService.getUserCategoryByContentId("1", "1", "1"));
+        assertThrows(BusinessException.class, () -> userCategoryService.getUserCategoryById("1", "1", "1"));
     }
 
     @Test
     public void testGetUserCategoryByContentId_UserNotAllowed() {
-        assertThrows(BusinessException.class, () -> userCategoryService.getUserCategoryByContentId("1", "1", "2"));
+        assertThrows(BusinessException.class, () -> userCategoryService.getUserCategoryById("1", "1", "2"));
     }
 
     @Test
     public void testGetUserCategoryByContentId_CategoryNotFound() {
         when(userRepository.findById("1")).thenReturn(Optional.of(new User()));
 
-        assertThrows(BusinessException.class, () -> userCategoryService.getUserCategoryByContentId("1", "cat", "1"));
+        assertThrows(BusinessException.class, () -> userCategoryService.getUserCategoryById("1", "cat", "1"));
     }
 
     @Test

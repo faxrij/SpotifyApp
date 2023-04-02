@@ -9,6 +9,7 @@ import com.example.spotifyproject.repository.CategoryRepository;
 import com.example.spotifyproject.repository.UserRepository;
 import com.example.spotifyproject.service.mapper.FromCategoryToCategoryResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ public class UserCategoryService {
     private final CategoryRepository categoryRepository;
     private final FromCategoryToCategoryResponse fromCategoryToCategoryResponse;
 
+    @Cacheable(value = "userCategoriesCache")
     public Page<CategoryResponse> getUserCategories(Pageable pageable, String id, String userId) {
 
         if (!(id.equals(userId))) {
@@ -49,7 +51,8 @@ public class UserCategoryService {
         return new PageImpl<>(categoryList.stream().map(fromCategoryToCategoryResponse::fromCategoryToCategoryResponse).collect(Collectors.toList()));
     }
 
-    public CategoryResponse getUserCategoryByContentId(String userId, String categoryId, String currentUserId) {
+    @Cacheable(value = "userCategoryCache", key = "#categoryId")
+    public CategoryResponse getUserCategoryById(String userId, String categoryId, String currentUserId) {
         if (!(currentUserId.equals(userId))) {
             throw new BusinessException(ErrorCode.forbidden, "You cannot see other users' content");
         }

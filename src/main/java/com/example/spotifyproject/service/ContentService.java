@@ -11,6 +11,7 @@ import com.example.spotifyproject.repository.UserRepository;
 import com.example.spotifyproject.service.mapper.FromSongToContentResponse;
 import com.example.spotifyproject.util.DateUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class ContentService {
     private final UserRepository userRepository;
     private final FromSongToContentResponse fromSongToContentResponse;
 
+    @Cacheable(value = "songsCache")
     public Page<ContentResponse> getAllContent(Pageable pageable, String name, String lyrics, String title ,String composerName, String userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new BusinessException(ErrorCode.account_missing, "User does not exist")
@@ -43,6 +45,7 @@ public class ContentService {
         return songs.map(fromSongToContentResponse::fromSongToContentResponse);
     }
 
+    @Cacheable(value = "songCache", key = "#contentId")
     public ContentResponse getContentById(String contentId, String userId) {
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new BusinessException(ErrorCode.account_missing, "User does not exist")

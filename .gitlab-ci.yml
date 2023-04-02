@@ -32,22 +32,22 @@ Base Image:
       .
     - docker push $CI_BASE_IMAGE
 
-#Test:
-#  image: registry.gitlab.com/fahri7403304/todo/base:latest
-#  stage: test
-#  services:
-#    - docker:18.09-dind
-#  variables:
-#    SPRING_PROFILES_ACTIVE: local
-#    DOCKER_HOST: tcp://docker:2375
-#    DOCKER_TLS_CERTDIR: ''
-#    DOCKER_DRIVER: overlay2
-#  script:
-#    - mvn verify
-#  artifacts:
-#    when: on_failure
-#    paths:
-#      - target/surefire-reports
+Test:
+  image: registry.gitlab.com/fahri7403304/spotify_backend/base:latest
+  stage: test
+  services:
+    - docker:18.09-dind
+  variables:
+    SPRING_PROFILES_ACTIVE: local
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_TLS_CERTDIR: ''
+    DOCKER_DRIVER: overlay2
+  script:
+    - mvn verify
+  artifacts:
+    when: on_failure
+    paths:
+      - target/surefire-reports
 
 Build:
   image: docker:18.09

@@ -24,7 +24,7 @@ public class UserCategoryController {
     @GetMapping("/{userId}/category/{categoryId}")
     public CategoryResponse getUserCategoryByContentId(@PathVariable String userId,
                                                        @PathVariable String categoryId) {
-        return userCategoryService.getUserCategoryByContentId(userId, categoryId, authenticationService.getAuthenticatedUserId());
+        return userCategoryService.getUserCategoryById(userId, categoryId, authenticationService.getAuthenticatedUserId());
     }
 
     @PostMapping("/{userId}/category/{categoryId}/follow")
