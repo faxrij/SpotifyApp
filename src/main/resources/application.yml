@@ -2,14 +2,8 @@ server:
   port: 8080
 
 spring:
-  jpa:
-    generate-ddl: true
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-  sql:
-    init:
-      platform: 'postgres'
+  profiles:
+    active: dev
   mail:
     host: ${MAIL_HOST}
     port: 587
@@ -26,11 +20,7 @@ spring:
           write-timeout: 5000
           starttls:
             enable: true
-  datasource:
-    username: ${POSTGRESQL_USERNAME}
-    password: ${POSTGRESQL_PASSWORD}
-    url: ${POSTGRESQL_URL}
-    driver-class-name: org.postgresql.Driver
+
   redis:
     host: "localhost"
     port: 6379
@@ -40,3 +30,36 @@ spring:
 
 security:
   jwtSecret: ${JWT_SECRET}
+
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: dev
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  sql:
+    init:
+      platform: 'postgres'
+  datasource:
+    username: ${POSTGRESQL_USERNAME_MACHINE}
+    password: ${POSTGRESQL_PASSWORD_MACHINE}
+    url: ${POSTGRESQL_URL_MACHINE}
+    driver-class-name: org.postgresql.Driver
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    username: ${POSTGRESQL_USERNAME}
+    password: ${POSTGRESQL_PASSWORD}
+    url: ${POSTGRESQL_URL}
+    driver-class-name: org.postgresql.Driver
