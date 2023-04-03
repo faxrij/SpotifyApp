@@ -27,14 +27,20 @@ spring:
           starttls:
             enable: true
   datasource:
-    username: ${POSTGRESQL_USERNAME}
-    password: ${POSTGRESQL_PASSWORD}
-    url: ${POSTGRESQL_URL}
+    username: ${POSTGRESQL_USERNAME_MACHINE}
+#    ${POSTGRESQL_USERNAME}
+
+    password: ${POSTGRESQL_PASSWORD_MACHINE}
+#    ${POSTGRESQL_PASSWORD}
+    url: ${POSTGRESQL_URL_MACHINE}
+#      ${POSTGRESQL_URL}
     driver-class-name: org.postgresql.Driver
   redis:
     host: "localhost"
     port: 6379
-#    tim
+  cache:
+    redis:
+      time-to-live: 60000
 
 security:
   jwtSecret: ${JWT_SECRET}
