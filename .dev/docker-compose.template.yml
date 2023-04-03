@@ -7,8 +7,8 @@ services:
     restart: always
     volumes:
       - /home/spotify/cdn/:/data/
-    extra_hosts:
-      - "host.docker.internal:172.17.0.1"
+#    extra_hosts:
+#      - "host.docker.internal:172.17.0.1"
     environment:
       - POSTGRESQL_URL=${POSTGRESQL_URL_MACHINE}
       - POSTGRESQL_USERNAME=${POSTGRESQL_USERNAME_MACHINE}
@@ -25,7 +25,3 @@ services:
     image: redis:latest
     ports:
       - "6379:6379"
-
-#networks:
-#  gateway:
-#    external: true
