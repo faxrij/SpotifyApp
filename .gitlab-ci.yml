@@ -80,10 +80,10 @@ Deploy:
     - echo "$SSH_IDENTITY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan 18.235.179.240 >> ~/.ssh/known_hosts
+    - ssh-keyscan 35.174.106.185 >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
     - mkdir server
     - envsubst < .dev/docker-compose.template.yml > server/docker-compose.yml
-    - scp -r server ec2-user@18.235.179.240:/home/ec2-user/
-    - ssh ec2-user@18.235.179.240 "cd /home/ec2-user/server && docker-compose up -d"
+    - scp -r server ec2-user@35.174.106.185:/home/ec2-user/
+    - ssh ec2-user@35.174.106.185 "cd /home/ec2-user/server && docker-compose up -d"
