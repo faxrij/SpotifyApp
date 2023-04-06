@@ -26,7 +26,6 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
       - REDIS_HOST=cache
-      - REDIS_PORT=6379
     depends_on:
       - cache
 
