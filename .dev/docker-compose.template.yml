@@ -1,9 +1,14 @@
 version: '3'
 services:
-  redis-server:
-    image: redis:latest
+  cache:
+    image: redis:6.2-alpine
+    restart: always
     ports:
-      - "6379:6379"
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - cache:/data
+
 
   server:
     image: ${CI_REGISTRY_IMAGE}:${CI_IMAGE_TAG}
@@ -20,5 +25,11 @@ services:
       - MAIL_USERNAME=${MAIL_USERNAME}
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
-    links:
-      - redis-server
+      - REDIS_HOST=cache
+      - REDIS_PORT=6379
+    depends_on:
+      - cache
+
+volumes:
+  cache:
+    driver: local

@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: test
   mail:
     host: ${MAIL_HOST}
     port: 587
@@ -22,7 +22,7 @@ spring:
             enable: true
 
   redis:
-    host: "localhost"
+    host: cache
     port: 6379
   cache:
     redis:
