@@ -3,8 +3,8 @@ services:
   cache:
     image: redis:6.2-alpine
     restart: always
-    ports:
-      - '6379:6379'
+#    ports:
+#      - '6379:6379'
     command: redis-server --save 20 1 --loglevel warning
     volumes:
       - cache:/data
@@ -26,6 +26,7 @@ services:
       - MAIL_PASSWORD=${MAIL_PASSWORD}
       - JWT_SECRET=${JWT_SECRET}
       - REDIS_HOST=cache
+      - REDIS_PORT=6379
     depends_on:
       - cache
 
