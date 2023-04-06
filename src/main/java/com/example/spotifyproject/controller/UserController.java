@@ -1,5 +1,6 @@
 package com.example.spotifyproject.controller;
 
+import com.example.spotifyproject.model.request.User.UpdateUserRequest;
 import com.example.spotifyproject.model.response.InvoiceResponse;
 import com.example.spotifyproject.model.response.UserResponse;
 import com.example.spotifyproject.service.AuthenticationService;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
+
     private final UserService userService;
     private final AuthenticationService authenticationService;
+
     @GetMapping
     public Page<UserResponse> getUsers(Pageable pageable) {
         return userService.getUsers(pageable, authenticationService.getAuthenticatedUserId());
@@ -38,11 +41,8 @@ public class UserController {
         userService.subscribe(userId, subId, authenticationService.getAuthenticatedUserId());
     }
 
-
-    // TO BE MADE
-
-//    @PutMapping("/{id}")
-//    public void updateUserById(@PathVariable String id, UpdateUserRequest updateUserRequest) {
-//        userService.updateUserById(id, updateUserRequest, authenticationService.getAuthenticatedUserId());
-//    }
+    @PutMapping("/{id}")
+    public void updateUserById(@PathVariable String id, UpdateUserRequest updateUserRequest) {
+        userService.updateUserById(id, updateUserRequest, authenticationService.getAuthenticatedUserId());
+    }
 }

@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: test
   mail:
     host: ${MAIL_HOST}
     port: 587
@@ -58,6 +58,14 @@ spring:
   config:
     activate:
       on-profile: test
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  sql:
+    init:
+      platform: 'postgres'
   datasource:
     username: ${POSTGRESQL_USERNAME}
     password: ${POSTGRESQL_PASSWORD}

@@ -28,13 +28,13 @@ public class UserCategoryController {
     }
 
     @PostMapping("/{userId}/category/{categoryId}/follow")
-    public void userLikeSongById(@PathVariable String userId,
+    public void userLikeCategoryById(@PathVariable String userId,
                                  @PathVariable String categoryId) {
         userCategoryService.userLikeCategoryById(userId, categoryId, authenticationService.getAuthenticatedUserId());
     }
 
     @PostMapping("/{userId}/category/{categoryId}/unfollow")
-    public void userRemoveLikedSongById(@PathVariable String userId,
+    public void userRemoveLikedCategoryById(@PathVariable String userId,
                                         @PathVariable String categoryId) {
         userCategoryService.userRemoveLikedCategoryById(userId, categoryId, authenticationService.getAuthenticatedUserId());
     }

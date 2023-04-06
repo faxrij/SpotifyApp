@@ -1,0 +1,1 @@
+delete from user_liked_song_table;

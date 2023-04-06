@@ -3,8 +3,11 @@ package com.example.spotifyproject.helper;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import java.security.Key;
 import java.util.Date;
 
 @Component
@@ -15,9 +18,10 @@ public class TokenHelper {
 
         String secretKey = System.getenv(JWT_SECRET);
 
-        byte[] signingKey = secretKey.getBytes();
+        byte[] signingKey = Decoders.BASE64.decode(secretKey);
+        Key keys = Keys.hmacShaKeyFor(signingKey);
         return Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, signingKey)
+                .signWith(keys, SignatureAlgorithm.HS512)
                 .setHeaderParam("type", "JWT")
                 .setSubject("39d525c8-25a5-4b7c-b6e1-6aa0132cf104")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -29,14 +33,15 @@ public class TokenHelper {
 
         String secretKey = System.getenv(JWT_SECRET);
 
-        byte[] signingKey = secretKey.getBytes();
+        byte[] signingKey = Decoders.BASE64.decode(secretKey);
+        Key keys = Keys.hmacShaKeyFor(signingKey);
+
         return Jwts.builder()
-                .signWith(SignatureAlgorithm.HS512, signingKey)
+                .signWith(keys, SignatureAlgorithm.HS512)
                 .setHeaderParam("type", "JWT")
                 .setSubject("39d525c8-25a5-4b7c-b6e1-6aa0132cf102")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 864000000))
                 .compact();
     }
-
 }

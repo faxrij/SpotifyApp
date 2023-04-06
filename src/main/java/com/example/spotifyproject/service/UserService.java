@@ -3,6 +3,7 @@ package com.example.spotifyproject.service;
 import com.example.spotifyproject.entity.*;
 import com.example.spotifyproject.exception.BusinessException;
 import com.example.spotifyproject.exception.ErrorCode;
+import com.example.spotifyproject.model.request.User.UpdateUserRequest;
 import com.example.spotifyproject.model.response.InvoiceResponse;
 import com.example.spotifyproject.model.response.UserResponse;
 import com.example.spotifyproject.repository.*;
@@ -144,6 +145,21 @@ public class UserService {
         contractRepository.save(contractRecord);
 
         user.setRole(Role.MEMBER);
+        userRepository.save(user);
+    }
+
+    public void updateUserById(String id, UpdateUserRequest request, String currentUserId) {
+        if (!id.equals(currentUserId)) {
+            throw new BusinessException(ErrorCode.forbidden, "Not allowed");
+        }
+
+        User user = userRepository.findById(id).orElseThrow(
+                () -> new BusinessException(ErrorCode.resource_missing, "Account does not exist")
+        );
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setLastName(request.getLastName());
+
         userRepository.save(user);
     }
 }

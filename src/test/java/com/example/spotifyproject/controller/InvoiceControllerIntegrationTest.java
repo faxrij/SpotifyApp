@@ -3,6 +3,7 @@ package com.example.spotifyproject.controller;
 import com.example.spotifyproject.helper.TokenHelper;
 import com.example.spotifyproject.model.request.PayInvoiceRequest;
 import com.example.spotifyproject.model.response.CategoryResponse;
+import com.example.spotifyproject.model.response.InvoiceResponse;
 import com.example.spotifyproject.util.RestResponsePage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,7 @@ import org.springframework.http.*;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.testcontainers.junit.jupiter.Testcontainers;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -113,11 +115,11 @@ public class InvoiceControllerIntegrationTest {
 
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
 
-        ResponseEntity<CategoryResponse> response = restTemplate.exchange(
+        ResponseEntity<InvoiceResponse> response = restTemplate.exchange(
                 "/invoice/" + invoiceId,
                 HttpMethod.GET,
                 entity,
-                CategoryResponse.class);
+                InvoiceResponse.class);
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
     }
