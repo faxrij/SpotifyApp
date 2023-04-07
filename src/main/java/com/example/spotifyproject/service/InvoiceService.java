@@ -124,7 +124,8 @@ public class InvoiceService {
 
     private void removeContractsThatAreExpired(List<ContractRecord> contractRecordList) {
         for (ContractRecord temp: contractRecordList) {
-            if (temp.getCreatedDate().plusMonths(temp.getDuration()).isBefore(DateUtil.now())) {
+//            if (temp.getCreatedDate().plusMonths(temp.getDuration()).isBefore(DateUtil.now())) {
+            if (temp.getInvoices().size()==temp.getDuration()) {
                 temp.setActive(false);
                 User user = temp.getUser_fk();
                 user.setRole(Role.GUEST);
