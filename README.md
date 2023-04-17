@@ -1,4 +1,4 @@
-# SpotifyApp
+# SpotifyApplication
 
 This is Spotify Application that is built by Java Spring Boot.
 
